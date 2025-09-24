@@ -1,71 +1,88 @@
-import 'package:flutter/services.dart';
+import 'dart:math';
+import 'package:credo/app/routes/app_pages.dart';
+import 'package:credo/wallet_controller.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:bip39/bip39.dart' as bip39;
 
 class RecoveryPhraseController extends GetxController {
-  // simple counter you had
-  final count = 0.obs;
-
-  // observable mnemonic (12 words)
+  final WalletController walletController = WalletController();
+  final secureStore = Get.find<FlutterSecureStorage>();
   final mnemonic = ''.obs;
-
-  // whether the current mnemonic is valid
   final isValid = false.obs;
-
-  // seed (hex) derived from mnemonic
   final seedHex = ''.obs;
+
+  final originalWords = <String>[].obs;
+  final shuffledWords = <String>[].obs;
+  final placedWords = <String?>[].obs;
+
+  final errorMessage = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-    // generate a 12-word mnemonic when controller initializes
     generateMnemonic12();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  /// Generates a 12-word BIP39 mnemonic (128 bits of entropy)
   void generateMnemonic12() {
-    // bip39.generateMnemonic() with default strength 128 produces 12 words
-    final newMnemonic = bip39.generateMnemonic(); // strength=128 by default
+    final newMnemonic = bip39.generateMnemonic();
     mnemonic.value = newMnemonic;
     isValid.value = bip39.validateMnemonic(newMnemonic);
     seedHex.value = bip39.mnemonicToSeedHex(newMnemonic);
+
+    originalWords.assignAll(newMnemonic.split(" "));
+
+    final shuffled = List<String>.from(originalWords);
+    shuffled.shuffle(Random());
+    shuffledWords.assignAll(shuffled);
+
+    placedWords.assignAll(List<String?>.filled(originalWords.length, null));
+    errorMessage.value = '';
   }
 
-  /// Validate a given mnemonic string and update observables
-  void setMnemonic(String m) {
-    mnemonic.value = m.trim();
-    isValid.value = bip39.validateMnemonic(mnemonic.value);
-    seedHex.value =
-        isValid.value ? bip39.mnemonicToSeedHex(mnemonic.value) : '';
+  void selectWord(String word) {
+    if (placedWords.contains(word)) return;
+
+    final emptyIndex = placedWords.indexWhere((w) => w == null);
+    if (emptyIndex != -1) {
+      placedWords[emptyIndex] = word;
+    }
+
+    if (!placedWords.contains(null)) {
+      verifyPhrase();
+    }
   }
 
-  /// Copy mnemonic to clipboard
-  Future<void> copyMnemonicToClipboard() async {
-    if (mnemonic.value.isEmpty) return;
-    await Clipboard.setData(ClipboardData(text: mnemonic.value));
-    Get.snackbar(
-      'Copied',
-      'Recovery phrase copied to clipboard',
-      snackPosition: SnackPosition.BOTTOM,
-    );
+  void removeWord(int index) {
+    placedWords[index] = null;
+    errorMessage.value = '';
   }
 
-  /// Get seed as bytes (if you prefer bytes instead of hex)
-  List<int> getSeedBytes() {
-    // bip39.mnemonicToSeed returns Uint8List (depends on implementation)
-    final seed = bip39.mnemonicToSeed(mnemonic.value);
-    return seed;
+  void verifyPhrase() {
+    bool success = true;
+    for (int i = 0; i < originalWords.length; i++) {
+      if (originalWords[i] != placedWords[i]) {
+        success = false;
+        break;
+      }
+    }
+
+    if (success) {
+      errorMessage.value = '';
+      _saveMnemonic(mnemonic.value);
+
+      Get.toNamed(Routes.DASHBOARD);
+    } else {
+      errorMessage.value = "❌ Incorrect order, please try again.";
+    }
   }
 
-  void increment() => count.value++;
+  Future<void> _saveMnemonic(String mnemonic) async {
+    try {
+      await secureStore.write(key: 'Account 1', value: mnemonic);
+      walletController.createEthereumWallet(mnemonic);
+    } catch (e) {
+      errorMessage.value = 'Failed to save mnemonic: $e';
+    }
+  }
 }

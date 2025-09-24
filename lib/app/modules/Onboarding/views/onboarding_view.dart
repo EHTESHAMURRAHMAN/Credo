@@ -9,29 +9,38 @@ class OnboardingView extends GetView<OnboardingController> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
+      appBar: AppBar(toolbarHeight: 10),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              const SizedBox(height: 20),
+
               Column(
                 children: [
-                  const SizedBox(height: 40),
-                  Image.asset('assets/images/logo.png', height: 120),
-                  const SizedBox(height: 40),
+                  Image.asset('assets/images/logo.png', height: 250),
+                  const SizedBox(height: 32),
+
                   Text(
                     "Welcome to Credo Wallet",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.2,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 16),
                   Text(
                     "The safe and simple way to access blockchain applications.\nYour key to the decentralized web.",
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      height: 1.5,
+                      color: theme.hintColor,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -40,7 +49,7 @@ class OnboardingView extends GetView<OnboardingController> {
               Column(
                 children: [
                   SizedBox(
-                    width: double.infinity,
+                    width: Get.width / 1.4999,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -48,7 +57,7 @@ class OnboardingView extends GetView<OnboardingController> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      onPressed: () => Get.toNamed(Routes.RECOVERY_PHRASE),
+                      onPressed: () => Get.toNamed(Routes.PASSWORD),
                       child: const Text(
                         "Create a New Wallet",
                         style: TextStyle(
@@ -58,9 +67,9 @@ class OnboardingView extends GetView<OnboardingController> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 14),
                   SizedBox(
-                    width: double.infinity,
+                    width: Get.width / 1.5,
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -78,18 +87,15 @@ class OnboardingView extends GetView<OnboardingController> {
                       ),
                     ),
                   ),
-                ],
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: Text(
-                  "By continuing, you agree to the Terms & Privacy Policy.",
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).hintColor,
+                  const SizedBox(height: 16),
+                  Text(
+                    "By continuing, you agree to the Terms & Privacy Policy.",
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.hintColor,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
+                ],
               ),
             ],
           ),

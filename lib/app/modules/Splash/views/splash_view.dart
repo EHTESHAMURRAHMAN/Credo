@@ -11,7 +11,7 @@ class SplashView extends GetView<SplashController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset("assets/images/logo.png", height: Get.height / 5),
+            Image.asset("assets/images/logo.png", height: Get.height / 4),
             SizedBox(height: 20),
             CircularProgressIndicator(),
           ],

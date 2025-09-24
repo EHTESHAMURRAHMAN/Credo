@@ -17,6 +17,11 @@ abstract class Routes {
   static const WALLET_SETUP = _Paths.WALLET_SETUP;
   static const BIOMETRIC = _Paths.BIOMETRIC;
   static const RECOVERY_PHRASE = _Paths.RECOVERY_PHRASE;
+  static const PASSWORD = _Paths.PASSWORD;
+  static const CURRENCY_BUNDLE = _Paths.CURRENCY_BUNDLE;
+  static const TRANSACTIONS = _Paths.TRANSACTIONS;
+  static const BLOCKCHAIN_TRANSACTION_DETAILS =
+      _Paths.BLOCKCHAIN_TRANSACTION_DETAILS;
 }
 
 abstract class _Paths {
@@ -35,4 +40,9 @@ abstract class _Paths {
   static const WALLET_SETUP = '/wallet-setup';
   static const BIOMETRIC = '/biometric';
   static const RECOVERY_PHRASE = '/recovery-phrase';
+  static const PASSWORD = '/password';
+  static const CURRENCY_BUNDLE = '/currency-bundle';
+  static const TRANSACTIONS = '/transactions';
+  static const BLOCKCHAIN_TRANSACTION_DETAILS =
+      '/blockchain-transaction-details';
 }

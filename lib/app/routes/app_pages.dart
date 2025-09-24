@@ -4,8 +4,12 @@ import '../modules/Activity/bindings/activity_binding.dart';
 import '../modules/Activity/views/activity_view.dart';
 import '../modules/Biometric/bindings/biometric_binding.dart';
 import '../modules/Biometric/views/biometric_view.dart';
+import '../modules/BlockchainTransactionDetails/bindings/blockchain_transaction_details_binding.dart';
+import '../modules/BlockchainTransactionDetails/views/blockchain_transaction_details_view.dart';
 import '../modules/Browser/bindings/browser_binding.dart';
 import '../modules/Browser/views/browser_view.dart';
+import '../modules/CurrencyBundle/bindings/currency_bundle_binding.dart';
+import '../modules/CurrencyBundle/views/currency_bundle_view.dart';
 import '../modules/Dashboard/bindings/dashboard_binding.dart';
 import '../modules/Dashboard/views/dashboard_view.dart';
 import '../modules/History/bindings/history_binding.dart';
@@ -14,6 +18,8 @@ import '../modules/Home/bindings/home_binding.dart';
 import '../modules/Home/views/home_view.dart';
 import '../modules/Onboarding/bindings/onboarding_binding.dart';
 import '../modules/Onboarding/views/onboarding_view.dart';
+import '../modules/Password/bindings/password_binding.dart';
+import '../modules/Password/views/password_view.dart';
 import '../modules/Receive/bindings/receive_binding.dart';
 import '../modules/Receive/views/receive_view.dart';
 import '../modules/RecoveryPhrase/bindings/recovery_phrase_binding.dart';
@@ -26,6 +32,8 @@ import '../modules/Splash/bindings/splash_binding.dart';
 import '../modules/Splash/views/splash_view.dart';
 import '../modules/Swap/bindings/swap_binding.dart';
 import '../modules/Swap/views/swap_view.dart';
+import '../modules/Transactions/bindings/transactions_binding.dart';
+import '../modules/Transactions/views/transactions_view.dart';
 import '../modules/WalletSetup/bindings/wallet_setup_binding.dart';
 import '../modules/WalletSetup/views/wallet_setup_view.dart';
 
@@ -106,6 +114,26 @@ class AppPages {
       name: _Paths.RECOVERY_PHRASE,
       page: () => const RecoveryPhraseView(),
       binding: RecoveryPhraseBinding(),
+    ),
+    GetPage(
+      name: _Paths.PASSWORD,
+      page: () => const PasswordView(),
+      binding: PasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.CURRENCY_BUNDLE,
+      page: () => const CurrencyBundleView(),
+      binding: CurrencyBundleBinding(),
+    ),
+    GetPage(
+      name: _Paths.TRANSACTIONS,
+      page: () => const TransactionsView(),
+      binding: TransactionsBinding(),
+    ),
+    GetPage(
+      name: _Paths.BLOCKCHAIN_TRANSACTION_DETAILS,
+      page: () => const BlockchainTransactionDetailsView(),
+      binding: BlockchainTransactionDetailsBinding(),
     ),
   ];
 }

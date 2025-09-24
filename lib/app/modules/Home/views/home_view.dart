@@ -1,3 +1,5 @@
+import 'package:credo/app/Utils/logo.dart';
+import 'package:credo/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
@@ -8,32 +10,23 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          "Credo Wallet",
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(icon: const Icon(Icons.qr_code_scanner), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
-        ],
-      ),
+      appBar: AppBar(elevation: 0, automaticallyImplyLeading: false),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Wallet Balance
             const SizedBox(height: 10),
-            Text(
-              "0.0000 ETH",
-              style: Theme.of(
-                context,
-              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+            InkWell(
+              onTap: () {
+                //controller.secureStore.deleteAll();
+              },
+              child: Text(
+                'Total Balance',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             const SizedBox(height: 8),
             Text(
@@ -44,7 +37,6 @@ class HomeView extends GetView<HomeController> {
             ),
             const SizedBox(height: 30),
 
-            // Action Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -54,14 +46,12 @@ class HomeView extends GetView<HomeController> {
                   onTap: () {},
                   context: context,
                 ),
-
                 _actionButton(
                   icon: Icons.arrow_upward,
                   label: "Send",
                   onTap: () {},
                   context: context,
                 ),
-
                 _actionButton(
                   icon: Icons.swap_vert,
                   label: "Swap",
@@ -84,38 +74,53 @@ class HomeView extends GetView<HomeController> {
             ),
 
             const SizedBox(height: 12),
+            Obx(() {
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: controller.tokens.length,
+                itemBuilder: (context, index) {
+                  final token = controller.tokens[index];
 
-            _assetTile("Ethereum", "ETH", "0.0000", "\$0.00"),
-            _assetTile("Polygon", "MATIC", "0.0000", "\$0.00"),
-            _assetTile("Binance Coin", "BNB", "0.0000", "\$0.00"),
+                  return Obx(
+                    () => ListTile(
+                      leading: LogoBuilder(img: token.symbol),
+                      title: Text(token.name),
+                      subtitle: Text(
+                        token.price.value > 0
+                            ? "\$${token.price.value.toStringAsFixed(6)}"
+                            : "N/A",
+                      ),
+                      trailing: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            token.price.value > 0
+                                ? "\$${token.price.value.toStringAsFixed(6)}"
+                                : "N/A",
+                          ),
+                          Text(
+                            token.price.value > 0
+                                ? "\$${token.price.value.toStringAsFixed(6)}"
+                                : "N/A",
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            }),
 
             const SizedBox(height: 20),
 
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Activity",
+                '',
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Theme.of(context).dividerColor),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Text(
-                  "No transactions yet",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).hintColor,
-                  ),
-                ),
               ),
             ),
           ],
@@ -150,31 +155,6 @@ class HomeView extends GetView<HomeController> {
         const SizedBox(height: 8),
         Text(label, style: Theme.of(context).textTheme.bodyMedium),
       ],
-    );
-  }
-
-  Widget _assetTile(
-    String name,
-    String symbol,
-    String balance,
-    String usdValue,
-  ) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: CircleAvatar(radius: 20, child: Text(symbol[0])),
-      title: Text(name),
-      subtitle: Text(symbol),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(balance, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(
-            usdValue,
-            style: TextStyle(color: Get.theme.hintColor, fontSize: 12),
-          ),
-        ],
-      ),
     );
   }
 }
