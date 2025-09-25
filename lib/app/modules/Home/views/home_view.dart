@@ -17,10 +17,9 @@ class HomeView extends GetView<HomeController> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 10),
+
             InkWell(
-              onTap: () {
-                //controller.secureStore.deleteAll();
-              },
+              onTap: () {},
               child: Text(
                 'Total Balance',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -29,10 +28,12 @@ class HomeView extends GetView<HomeController> {
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              "\$0.00 USD",
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).hintColor,
+            Obx(
+              () => Text(
+                "\$${controller.totalValue.value.toStringAsFixed(2)}",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).hintColor,
+                ),
               ),
             ),
             const SizedBox(height: 30),
@@ -72,9 +73,13 @@ class HomeView extends GetView<HomeController> {
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
-
             const SizedBox(height: 12),
+
             Obx(() {
+              if (controller.tokens.isEmpty) {
+                return const Center(child: Text("No assets available"));
+              }
+
               return ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -82,27 +87,43 @@ class HomeView extends GetView<HomeController> {
                 itemBuilder: (context, index) {
                   final token = controller.tokens[index];
 
-                  return Obx(
-                    () => ListTile(
-                      leading: LogoBuilder(img: token.symbol),
-                      title: Text(token.name),
-                      subtitle: Text(
+                  return ListTile(
+                    onTap: () {
+                      Get.toNamed(
+                        Routes.TRANSACTIONS,
+                        arguments: {
+                          "logo": token.symbol,
+                          "address": controller.currencyAddress.value,
+                          "currency": token.name,
+                          "balance": token.balance.value.toStringAsFixed(6),
+                          'symbols': token.symbol,
+                        },
+                      );
+                    },
+                    leading: LogoBuilder(img: token.symbol),
+                    title: Text(token.symbol.toUpperCase()),
+                    subtitle: Obx(
+                      () => Text(
                         token.price.value > 0
-                            ? "\$${token.price.value.toStringAsFixed(6)}"
+                            ? "\$${token.price.value.toStringAsFixed(4)}"
                             : "N/A",
                       ),
-                      trailing: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                    trailing: Obx(
+                      () => Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            token.price.value > 0
-                                ? "\$${token.price.value.toStringAsFixed(6)}"
-                                : "N/A",
+                            token.balance.value > 0
+                                ? "\$${token.balance.value.toStringAsFixed(4)}"
+                                : "0.0000",
                           ),
                           Text(
                             token.price.value > 0
-                                ? "\$${token.price.value.toStringAsFixed(6)}"
-                                : "N/A",
+                                ? token.symbol.toUpperCase()
+                                : "",
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
                       ),
@@ -111,18 +132,6 @@ class HomeView extends GetView<HomeController> {
                 },
               );
             }),
-
-            const SizedBox(height: 20),
-
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
           ],
         ),
       ),

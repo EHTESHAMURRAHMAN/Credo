@@ -64,9 +64,9 @@ class DashboardController extends GetxController {
   void _disposeController(int index) {
     switch (index) {
       case 0:
-        if (Get.isRegistered<HomeController>()) {
-          Get.delete<HomeController>();
-        }
+        // if (Get.isRegistered<HomeController>()) {
+        //   Get.delete<HomeController>();
+        // }
         break;
       case 1:
         if (Get.isRegistered<BrowserController>()) {

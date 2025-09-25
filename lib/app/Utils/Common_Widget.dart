@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 Widget heading(String heading1, String heading2, {Color? color}) {
@@ -23,6 +24,15 @@ Widget heading(String heading1, String heading2, {Color? color}) {
         ),
       ),
     ],
+  );
+}
+
+void toast({required String value, int? position = 1, bool? isTrue = true}) {
+  Fluttertoast.showToast(
+    msg: value,
+    backgroundColor:
+        isTrue ?? false ? Get.theme.primaryColor : Colors.red.shade800,
+    gravity: position == 0 ? ToastGravity.BOTTOM : ToastGravity.TOP,
   );
 }
 

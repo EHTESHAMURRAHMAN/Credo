@@ -14,10 +14,12 @@ class TransactionsController extends GetxController {
 
   final blockchainExplorer = RxList<BlockchainExplorer>();
   final isblockchainExplorer = false.obs;
+
   final address = "".obs;
   final logo = "".obs;
   final currency = "".obs;
   final balance = "".obs;
+  final symbols = "".obs;
   final phrase = "".obs;
 
   final argument = Get.arguments;
@@ -31,8 +33,10 @@ class TransactionsController extends GetxController {
       address.value = argument['address'];
       currency.value = argument['currency'];
       balance.value = argument['balance'];
+      symbols.value = argument['symbols'];
     }
-    //_loadTransactions();
+    fetchBlockchainbalance();
+    _loadTransactions();
   }
 
   DateTime formatDate(String date) {
@@ -42,79 +46,76 @@ class TransactionsController extends GetxController {
 
   Future<void> fetchBlockchainbalance() async {
     isblockchainExplorer.value = false;
-
     String contractAddress = "";
     String aPiKey;
     String baseApi;
 
-    switch (currency.value) {
+    switch (symbols.value) {
       case 'ETH':
-        aPiKey = 'KN11XA92VVWZ14IXNGTSTGFWM94QWXJU84';
-        baseApi = 'https://api.etherscan.io/api';
+        aPiKey = 'AXBMSIDTINPT3ETNRCKERPX4IFQWE8BDT1';
+        baseApi = 'https://api.etherscan.io/v2/api?chainid=1';
         break;
       case 'BNB':
-        aPiKey = 'JYIPC1JZPV2M32R6M8FGIREX14VXHCK5T3';
-        baseApi = 'https://api.bscscan.com/api';
+        aPiKey = 'AXBMSIDTINPT3ETNRCKERPX4IFQWE8BDT1';
+        baseApi = 'https://api.etherscan.io/v2/api?chainid=8453';
         break;
       case 'DOGE-BEP20':
         contractAddress = '0xbA2aE424d960c26247Dd6c32edC70B295c744C43';
-        aPiKey = 'JYIPC1JZPV2M32R6M8FGIREX14VXHCK5T3';
-        baseApi = 'https://api.bscscan.com/api';
+        aPiKey = 'AXBMSIDTINPT3ETNRCKERPX4IFQWE8BDT1';
+        baseApi = 'https://api.etherscan.io/v2/api?chainid=8453';
         break;
       case 'XRP-BEP20':
         contractAddress = '0x1d2f0da169ceb9fc7b3144628db156f3f6c60dbe';
-        aPiKey = 'JYIPC1JZPV2M32R6M8FGIREX14VXHCK5T3';
-        baseApi = 'https://api.bscscan.com/api';
+        aPiKey = 'AXBMSIDTINPT3ETNRCKERPX4IFQWE8BDT1';
+        baseApi = 'https://api.etherscan.io/v2/api?chainid=8453';
         break;
       case 'USDC-BEP20':
         contractAddress = '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d';
-        aPiKey = 'JYIPC1JZPV2M32R6M8FGIREX14VXHCK5T3';
-        baseApi = 'https://api.bscscan.com/api';
+        aPiKey = 'AXBMSIDTINPT3ETNRCKERPX4IFQWE8BDT1';
+        baseApi = 'https://api.etherscan.io/v2/api?chainid=8453';
         break;
       case 'USDT-BEP20':
         contractAddress = '0x55d398326f99059ff775485246999027b3197955';
-        aPiKey = 'JYIPC1JZPV2M32R6M8FGIREX14VXHCK5T3';
-        baseApi = 'https://api.bscscan.com/api';
+        aPiKey = 'AXBMSIDTINPT3ETNRCKERPX4IFQWE8BDT1';
+        baseApi = 'https://api.etherscan.io/v2/api?chainid=8453';
         break;
       case 'OKB':
         contractAddress = '0xA27983aB73e4d1905451552C844951C24F7DDd98';
-        aPiKey = 'JYIPC1JZPV2M32R6M8FGIREX14VXHCK5T3';
-        baseApi = 'https://api.bscscan.com/api';
+        aPiKey = 'AXBMSIDTINPT3ETNRCKERPX4IFQWE8BDT1';
+        baseApi = 'https://api.etherscan.io/v2/api?chainid=8453';
         break;
       case 'RONIN':
         contractAddress = '0x6f240911Af540E987154cF5fb75DCa730660FB99';
-        aPiKey = 'JYIPC1JZPV2M32R6M8FGIREX14VXHCK5T3';
-        baseApi = 'https://api.bscscan.com/api';
+        aPiKey = 'AXBMSIDTINPT3ETNRCKERPX4IFQWE8BDT1';
+        baseApi = 'https://api.etherscan.io/v2/api?chainid=8453';
         break;
       case 'PEPE-BEP20':
         contractAddress = '0x25d887ce7a35172c62febfd67a1856f20faebb00';
-        aPiKey = 'JYIPC1JZPV2M32R6M8FGIREX14VXHCK5T3';
-        baseApi = 'https://api.bscscan.com/api';
+        aPiKey = 'AXBMSIDTINPT3ETNRCKERPX4IFQWE8BDT1';
+        baseApi = 'https://api.etherscan.io/v2/api?chainid=8453';
         break;
-
       case 'POL':
-        contractAddress = '0x0000000000000000000000000000000000001010';
-        aPiKey = 'NXXHMN1JPBNUEEFNCX2NY4VX6NDTARXU8B';
-        baseApi = 'https://api.polygonscan.com/api';
+        aPiKey = 'AXBMSIDTINPT3ETNRCKERPX4IFQWE8BDT1';
+        baseApi = 'https://api-testnet.polygonscan.com/v2/api?chainid=80001';
         break;
-
+      // aPiKey = 'AXBMSIDTINPT3ETNRCKERPX4IFQWE8BDT1';
+      // baseApi = 'https://api.etherscan.io/v2/api?chainid=8453';
+      // break;
       default:
         contractAddress = '0x0000000000000000000000000000000000001010';
-        aPiKey = 'NXXHMN1JPBNUEEFNCX2NY4VX6NDTARXU8B';
-        baseApi = 'https://api.polygonscan.com/api';
+        aPiKey = 'AXBMSIDTINPT3ETNRCKERPX4IFQWE8BDT1';
+        baseApi = 'https://api.etherscan.io/v2/api?chainid=8453';
         break;
     }
 
     final tokenApi =
-        '$baseApi?module=account&action=tokentx&'
-        'contractaddress=$contractAddress&address=${address.value}&'
-        'startblock=0&endblock=99999999&sort=desc&apikey=$aPiKey';
+        '$baseApi&module=account&action=tokentx&contractaddress=$contractAddress&address=${address.value}&startblock=0&endblock=99999999&sort=desc&apikey=$aPiKey';
     final bnbApi =
-        '$baseApi?module=account&action=txlist&address=${address.value}&startblock=0&endblock=99999999&sort=desc&apikey=$aPiKey';
+        '$baseApi&module=account&action=txlist&address=${address.value}&startblock=0&endblock=99999999&sort=desc&apikey=$aPiKey';
     final polApi =
-        '$baseApi?module=account&action=txlist&address=${address.value}&startblock=0&endblock=99999999&sort=desc&apikey=$aPiKey';
+        '$baseApi&module=account&action=txlist&address=${address.value}&startblock=0&endblock=99999999&sort=desc&apikey=$aPiKey';
     final ethApi =
-        '$baseApi?module=account&action=tokentx&address=${address.value}&startblock=0&endblock=99999999&sort=desc&apikey=$aPiKey';
+        '$baseApi&module=account&action=tokentx&address=${address.value}&startblock=0&endblock=99999999&sort=desc&apikey=$aPiKey';
     try {
       ApiResponse apiresponse = await apiImport.otherTransaction(
         currency.value == 'BNB'

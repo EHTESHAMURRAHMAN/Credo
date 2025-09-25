@@ -1,4 +1,39 @@
+import 'dart:convert';
 import 'package:get/get.dart';
+
+TokensResponse tokensResponseFromJson(String str) =>
+    TokensResponse.fromJson(json.decode(str));
+
+String tokensResponseToJson(TokensResponse data) => json.encode(data.toJson());
+
+class TokensResponse {
+  TokensResponse({
+    required this.status,
+    required this.message,
+    required this.tokens,
+  });
+
+  final String status;
+  final String message;
+  final List<Token> tokens;
+
+  factory TokensResponse.fromJson(Map<String, dynamic> json) => TokensResponse(
+    status: json["status"] ?? "",
+    message: json["message"] ?? "",
+    tokens:
+        json["tokens"] == null
+            ? []
+            : List<Token>.from(
+              (json["tokens"] as List).map((x) => Token.fromJson(x)),
+            ),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "status": status,
+    "message": message,
+    "tokens": List<dynamic>.from(tokens.map((x) => x.toJson())),
+  };
+}
 
 class Token {
   final String id;
@@ -10,6 +45,7 @@ class Token {
   final String coingeckoId;
   final bool enabledByDefault;
   final RxDouble price = 0.0.obs;
+  final RxDouble balance = 0.0.obs;
 
   Token({
     required this.id,
@@ -33,5 +69,18 @@ class Token {
       coingeckoId: json['coingecko_id'],
       enabledByDefault: json['enabled_by_default'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "chain": chain,
+      "symbol": symbol,
+      "name": name,
+      "contract": contract,
+      "decimals": decimals,
+      "coingecko_id": coingeckoId,
+      "enabled_by_default": enabledByDefault,
+    };
   }
 }

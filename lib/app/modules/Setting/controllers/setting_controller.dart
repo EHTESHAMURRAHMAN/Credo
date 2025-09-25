@@ -1,7 +1,8 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 class SettingController extends GetxController {
-  //TODO: Implement SettingController
+  final secureStore = Get.find<FlutterSecureStorage>();
 
   final count = 0.obs;
   @override

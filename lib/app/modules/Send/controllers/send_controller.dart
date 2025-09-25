@@ -24,7 +24,7 @@ class SendController extends GetxController {
     if (argument != null) {
       currency.value = argument["currency"] ?? "";
       address.value = argument["address"] ?? "";
-      icon.value = argument["icon"] ?? "";
+      icon.value = argument["logo"] ?? "";
       symbols.value = argument["symbols"] ?? "";
     }
 

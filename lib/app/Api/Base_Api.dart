@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart' show rootBundle;
 
 var timeoutDuration = 90;
 
@@ -75,20 +76,29 @@ ApiResponse responseFilter(http.Response response) {
   }
 }
 
-Future<http.Response> getRequest(url) async {
+Future<http.Response> getRequest(String url) async {
   if (kDebugMode) {
-    print(url);
+    print("Request => $url");
   }
 
-  final response = await http
-      .get(Uri.parse(url), headers: headers)
-      .timeout(
-        Duration(seconds: timeoutDuration),
-        onTimeout: () {
-          return http.Response('Request time out', 408);
-        },
-      );
-  return response;
+  try {
+    if (url.startsWith("assets/")) {
+      final jsonStr = await rootBundle.loadString(url);
+      return http.Response(jsonStr, 200);
+    }
+
+    final response = await http
+        .get(Uri.parse(url), headers: headers)
+        .timeout(
+          Duration(seconds: timeoutDuration),
+          onTimeout: () {
+            return http.Response('Request time out', 408);
+          },
+        );
+    return response;
+  } catch (e) {
+    return http.Response('Error: $e', 500);
+  }
 }
 
 Future<http.Response> postRequest(url, body, {loading = true}) async {
